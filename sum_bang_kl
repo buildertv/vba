@@ -1,0 +1,32 @@
+Public Sub sumtheocot()
+'Tác giả Lê Hồng Phú
+    dc = Selection.Address
+    checkrange = InStr(1, dc, ",")
+    If checkrange = 0 Then
+        MsgBoxW "Không " & ChrW(273) & ChrW(7911) & " 2 vùng ch" & ChrW(7885) & "n"
+        End
+    End If
+    range1 = Left(dc, checkrange - 1)
+    range2 = Mid(dc, checkrange + 1)
+    If Mid(range1, Len(range1) - InStr(1, StrReverse(range1), "$") + 2) <> Mid(range2, Len(range2) - InStr(1, StrReverse(range2), "$") + 2) Then
+        MsgBoxW "Vùng ch" & ChrW(7885) & "n không b" & ChrW(7857) & "ng nhau"
+        End
+    End If
+    colcheck = Mid(range1, 2, InStr(2, range1, "$") - 2)
+    colsum = Mid(range2, 2, InStr(2, range2, "$") - 2)
+    j = Val(Mid(range1, InStr(2, range1, "$") + 1, InStr(2, range1, ":") - InStr(2, range1, "$") - 1))
+    For i = Mid(range1, InStr(2, range1, "$") + 1, InStr(2, range1, ":") - InStr(2, range1, "$") - 1) To Mid(range2, Len(range2) - InStr(1, StrReverse(range2), "$") + 2)
+        If (Range(colcheck & i).Value <> "") And (j < i) Then
+            Range(colsum & j).Formula = "=SUM(" & colsum & j + 1 & ":" & colsum & i - 1 & ")"
+            j = i
+        End If
+    Next
+    If j + 1 < i Then
+        Range(colsum & j).Formula = "=SUM(" & colsum & j + 1 & ":" & colsum & i - 1 & ")"
+    End If
+    MsgBoxW "Xong"
+End Sub
+
+Public Sub MsgBoxW(info As String)
+    Application.Assistant.DoAlert "THÔNG BÁO", info, 0, 4, 0, 0, 0
+End Sub
