@@ -1,4 +1,4 @@
-Public Sub sumtheocot()
+Public Sub autosum()
 'Tác giả Lê Hồng Phú
     dc = Selection.Address
     checkrange = InStr(1, dc, ",")
