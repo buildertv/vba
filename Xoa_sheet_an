@@ -1,0 +1,14 @@
+Sub DeleteHiddenAndVeryHiddenSheets()
+    Dim ws As Worksheet
+    Application.DisplayAlerts = False
+    For Each ws In ThisWorkbook.Worksheets
+        Select Case ws.Visible
+            Case xlSheetHidden
+                ws.Delete
+            Case xlSheetVeryHidden
+                ws.Visible = xlSheetHidden
+                ws.Delete
+            End Select
+    Next ws
+    Application.DisplayAlerts = True
+End Sub
