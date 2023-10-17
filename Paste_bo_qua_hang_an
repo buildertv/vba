@@ -1,0 +1,15 @@
+Sub Paste_to_Visible_Rows()
+
+Dim Nguon As Range, Dich As Range
+Dim i As Long, r As Long
+Set Nguon = Application.InputBox(prompt:="Chon Vung Copy ", Type:=8)
+Set Dich = Application.InputBox(prompt:="Chep Den ", Type:=8)
+For i = 1 To Nguon.Rows.Count
+Do Until Not Dich.Offset(r).Rows.Hidden
+r = r + 1
+Loop
+Nguon.Rows(i).Copy Destination:=Dich.Offset(r)
+r = r + 1
+Next i
+
+End Sub
