@@ -1,0 +1,26 @@
+Sub CompareAndHighlight()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+
+    ' Chọn vùng dữ liệu cần so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Chọn vùng dữ liệu từ tệp Excel 1", Type:=8)
+    Set r2 = Application.InputBox("Chọn vùng dữ liệu từ tệp Excel 2", Type:=8)
+    On Error GoTo 0
+
+    ' Kiểm tra xem người dùng có chọn vùng dữ liệu hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        MsgBox "Bạn chưa chọn vùng dữ liệu. Vui lòng thử lại."
+        Exit Sub
+    End If
+
+    ' So sánh và tô màu
+    For Each c In r1
+        If Not IsError(Application.Match(c.Value, r2, 0)) Then
+            c.Interior.Color = RGB(255, 0, 0) ' Tô màu đỏ
+        End If
+    Next c
+
+End Sub
