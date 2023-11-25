@@ -25,3 +25,311 @@ Sub CompareAndHighlight()
 
 End Sub
 
+Sub CompareAndHighlight1()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        CreateObject("WScript.Shell").Popup "B" & ChrW(7841) & "n ch" & ChrW(432) & "a ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u." & ChrW(13) & "Vui l" & ChrW(242) & "ng th" & ChrW(7917) & " l" & ChrW(7841) & "i!", , "BuilderTV - hoangtuan.net", 0 + 0
+        Exit Sub
+    End If
+
+'    ' So sánh và tô màu trên r1
+'    For Each c In r1
+'        If Not IsError(Application.Match(c.Value, r2, 0)) Then
+'            c.Interior.Color = RGB(255, 0, 0) ' Tô màu d?
+'
+'        End If
+'    Next c
+    
+        ' So sánh và tô màu trên r1+r2
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            c.Interior.Color = RGB(255, 0, 0) ' Tô màu d? trên r1
+            r2.Cells(matchIndex).Interior.Color = RGB(255, 0, 0) ' Tô màu d? trên r2
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+        MsgBox "Các ô trùng d? li?u: " & duplicateCells
+    Else
+        MsgBox "Không tìm th?y d? li?u trùng nhau."
+    End If
+
+End Sub
+
+Sub CompareAndHighlight2()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+    Dim matchIndex As Variant
+    Dim duplicateCells As String
+    Dim msgBoxResponse As Integer
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        CreateObject("WScript.Shell").Popup "B" & ChrW(7841) & "n ch" & ChrW(432) & "a ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u." & ChrW(13) & "Vui l" & ChrW(242) & "ng th" & ChrW(7917) & " l" & ChrW(7841) & "i!", , "BuilderTV - hoangtuan.net", 0 + 0
+        Exit Sub
+    End If
+
+    ' Tìm ki?m d? li?u trùng nhau
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+        msgBoxResponse = MsgBox("Các ô trùng d? li?u: " & duplicateCells & ". B?n có mu?n tô màu các ô trùng nhau không?", vbYesNoCancel + vbQuestion, "Tô màu ô trùng nhau")
+        
+        ' Ki?m tra ph?n h?i c?a ngu?i dùng
+        If msgBoxResponse = vbYes Then
+            ' Tô màu d? li?u trùng nhau
+            For Each c In r1
+                matchIndex = Application.Match(c.Value, r2, 0)
+                If Not IsError(matchIndex) Then
+                    c.Interior.Color = RGB(255, 0, 0) ' Tô màu d? trên r1
+                    r2.Cells(matchIndex).Interior.Color = RGB(255, 0, 0) ' Tô màu d? trên r2
+                End If
+            Next c
+        ElseIf msgBoxResponse = vbNo Then
+            ' Ch? tô màu d? li?u trùng nhau trên r1
+            For Each c In r1
+                If Not IsError(Application.Match(c.Value, r2, 0)) Then
+                    c.Interior.Color = RGB(255, 0, 0) ' Tô màu d? trên r1
+                End If
+            Next c
+        End If
+    Else
+        MsgBox "Không tìm th?y d? li?u trùng nhau."
+    End If
+
+End Sub
+
+Sub CompareAndHighlight3()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+    Dim matchIndex As Variant
+    Dim duplicateCells As String
+    Dim msgBoxResponse As Integer
+    Dim colorIndex As Integer
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        MsgBox "B?n chua ch?n vùng d? li?u. Vui lòng th? l?i."
+        Exit Sub
+    End If
+
+    ' Tìm ki?m d? li?u trùng nhau
+    colorIndex = 3 ' B?t d?u v?i màu d?
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+            c.Interior.colorIndex = colorIndex ' Tô màu trên r1
+            r2.Cells(matchIndex).Interior.colorIndex = colorIndex ' Tô màu trên r2
+            colorIndex = colorIndex + 1 ' Ch?n màu ti?p theo
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+        MsgBox "Các ô trùng d? li?u: " & duplicateCells
+    Else
+        MsgBox "Không tìm th?y d? li?u trùng nhau."
+    End If
+
+End Sub
+
+Sub CompareAndHighlight4()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+    Dim matchIndex As Variant
+    Dim duplicateCells As String
+    Dim colorIndex As Integer
+    Dim dict As Object
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        MsgBox "B?n chua ch?n vùng d? li?u. Vui lòng th? l?i."
+        Exit Sub
+    End If
+
+    ' T?o m?t t? di?n d? luu tr? màu cho m?i giá tr?
+    Set dict = CreateObject("Scripting.Dictionary")
+
+    ' Tìm ki?m d? li?u trùng nhau
+    colorIndex = 3 ' B?t d?u v?i màu d?
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+            If Not dict.Exists(c.Value) Then
+                dict.Add c.Value, colorIndex ' Thêm màu vào t? di?n
+                colorIndex = colorIndex + 1 ' Ch?n màu ti?p theo
+            End If
+            c.Interior.colorIndex = dict(c.Value) ' Tô màu trên r1
+            r2.Cells(matchIndex).Interior.colorIndex = dict(c.Value) ' Tô màu trên r2
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+        MsgBox "Các ô trùng d? li?u: " & duplicateCells
+    Else
+        MsgBox "Không tìm th?y d? li?u trùng nhau."
+    End If
+
+End Sub
+
+Sub CompareAndHighlight5()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+    Dim matchIndex As Variant
+    Dim duplicateCells As String
+    Dim colorIndex As Integer
+    Dim dict As Object
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        CreateObject("WScript.Shell").Popup "B" & ChrW(7841) & "n ch" & ChrW(432) & "a ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u." & ChrW(13) & "Vui l" & ChrW(242) & "ng th" & ChrW(7917) & " l" & ChrW(7841) & "i!", , "BuilderTV - hoangtuan.net", 0 + 0
+        Exit Sub
+    End If
+
+    ' T?o m?t t? di?n d? luu tr? màu cho m?i giá tr?
+    Set dict = CreateObject("Scripting.Dictionary")
+
+    ' Tìm ki?m d? li?u trùng nhau
+    colorIndex = 3 ' B?t d?u v?i màu d?
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+            If Not dict.Exists(c.Value) Then
+                dict.Add c.Value, colorIndex ' Thêm màu vào t? di?n
+                colorIndex = colorIndex + 1 ' Ch?n màu ti?p theo
+            End If
+            c.Interior.colorIndex = dict(c.Value) ' Tô màu trên r1
+        End If
+    Next c
+
+    For Each c In r2
+        If dict.Exists(c.Value) Then
+            c.Interior.colorIndex = dict(c.Value) ' Tô màu trên r2
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+    CreateObject("WScript.Shell").Popup "C" & ChrW(225) & "c " & ChrW(244) & " tr" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u c" & ChrW(7911) & "a v" & ChrW(249) & "ng 1 l" & ChrW(224) & ": " & duplicateCells, , "BuilderTV - hoangtuan.net", 0 + 0
+    Else
+        CreateObject("WScript.Shell").Popup "Kh" & ChrW(244) & "ng t" & ChrW(236) & "m th" & ChrW(7845) & "y d" & ChrW(7919) & " li" & ChrW(7879) & "u tr" & ChrW(249) & "ng nhau.", , "BuilderTV - hoangtuan.net", 0 + 0
+    End If
+
+End Sub
+
+Sub CompareAndHighlight6()
+
+    Dim r1 As Range
+    Dim r2 As Range
+    Dim c As Range
+    Dim matchIndex As Variant
+    Dim duplicateCells As String
+    Dim colorR As Integer
+    Dim colorG As Integer
+    Dim colorB As Integer
+    Dim dict As Object
+
+    ' Ch?n vùng d? li?u c?n so sánh
+    On Error Resume Next
+    Set r1 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 1:", "BuilderTV - hoangtuan.net", Type:=8)
+    Set r2 = Application.InputBox("Ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u 2:", "BuilderTV - hoangtuan.net", Type:=8)
+    On Error GoTo 0
+
+    ' Ki?m tra xem ngu?i dùng có ch?n vùng d? li?u hay không
+    If r1 Is Nothing Or r2 Is Nothing Then
+        CreateObject("WScript.Shell").Popup "B" & ChrW(7841) & "n ch" & ChrW(432) & "a ch" & ChrW(7885) & "n v" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u." & ChrW(13) & "Vui l" & ChrW(242) & "ng th" & ChrW(7917) & " l" & ChrW(7841) & "i!", , "BuilderTV - hoangtuan.net", 0 + 0
+        Exit Sub
+    End If
+
+    ' T?o m?t t? di?n d? luu tr? màu cho m?i giá tr?
+    Set dict = CreateObject("Scripting.Dictionary")
+
+    ' Tìm ki?m d? li?u trùng nhau
+    colorR = 255 ' B?t d?u v?i màu d?
+    colorG = 0
+    colorB = 0
+    For Each c In r1
+        matchIndex = Application.Match(c.Value, r2, 0)
+        If Not IsError(matchIndex) Then
+            duplicateCells = duplicateCells & " " & c.Address ' Thêm d?a ch? ô vào chu?i
+            If Not dict.Exists(c.Value) Then
+                dict.Add c.Value, RGB(colorR, colorG, colorB) ' Thêm màu vào t? di?n
+                colorR = (colorR + 50) Mod 256 ' Ch?n màu ti?p theo
+                colorG = (colorG + 150) Mod 256
+                colorB = (colorB + 350) Mod 256
+            End If
+            c.Interior.Color = dict(c.Value) ' Tô màu trên r1
+        End If
+    Next c
+
+    For Each c In r2
+        If dict.Exists(c.Value) Then
+            c.Interior.Color = dict(c.Value) ' Tô màu trên r2
+        End If
+    Next c
+
+    ' Hi?n th? b?ng thông báo
+    If duplicateCells <> "" Then
+    CreateObject("WScript.Shell").Popup "C" & ChrW(225) & "c " & ChrW(244) & " tr" & ChrW(249) & "ng d" & ChrW(7919) & " li" & ChrW(7879) & "u c" & ChrW(7911) & "a v" & ChrW(249) & "ng 1 l" & ChrW(224) & ": " & duplicateCells, , "BuilderTV - hoangtuan.net", 0 + 0
+    Else
+        CreateObject("WScript.Shell").Popup "Kh" & ChrW(244) & "ng t" & ChrW(236) & "m th" & ChrW(7845) & "y d" & ChrW(7919) & " li" & ChrW(7879) & "u tr" & ChrW(249) & "ng nhau.", , "BuilderTV - hoangtuan.net", 0 + 0
+    End If
+
+End Sub
+
