@@ -1,0 +1,36 @@
+Sub BtnChatGPT()
+Dim data As String
+Dim xhr As Object
+Dim Content  As String
+
+On Error Resume Next
+Content = "Reply briefly: " & ActiveCell.Value
+If ActiveCell.Value = "" Then Exit Sub
+' Set JSON data
+data = "{""prompt"": """ & Content & """, ""group"": ""vSq0lcE0xaOS6goOzg0W"", ""without_history"": false}"
+
+' Create a new instance of XML HTTP request
+Set xhr = CreateObject("MSXML2.ServerXMLHTTP")
+
+' Define the URL
+Url = "https://ai63.p.rapidapi.com/"
+
+' Open the connection
+xhr.Open "POST", Url, False
+
+' Set request headers
+xhr.setRequestHeader "content-type", "application/json"
+xhr.setRequestHeader "X-RapidAPI-Key", "thay-bang-doan-key-tai-khoan-cua-ban-nhe"
+xhr.setRequestHeader "X-RapidAPI-Host", "ai63.p.rapidapi.com"
+
+' Send the request
+xhr.send data
+
+' Check if request is completed
+If xhr.readyState = 4 And xhr.Status = 200 Then
+ActiveCell.Offset(1, 0).Value = xhr.responseText
+End If
+
+' Clean up
+Set xhr = Nothing
+End Sub
