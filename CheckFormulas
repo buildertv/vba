@@ -1,0 +1,37 @@
+Sub CheckFormulas()
+    Dim rng As Range
+    Dim cell As Range
+    Dim formula As String
+    Dim relativeFormula As String
+    Dim changedCells As Integer
+
+    ' Hiển thị hộp thoại để chọn phạm vi
+    On Error Resume Next
+    Set rng = Application.InputBox("Chọn phạm vi cần kiểm tra:", Type:=8)
+    On Error GoTo 0
+
+    If rng Is Nothing Then
+        MsgBox "Không có phạm vi nào được chọn. Hãy thử lại."
+        Exit Sub
+    End If
+
+    ' Lấy công thức từ ô đầu tiên
+    formula = rng.Cells(1, 1).Formula
+    relativeFormula = rng.Cells(1, 1).FormulaR1C1
+
+    ' Duyệt qua mỗi ô trong phạm vi
+    For Each cell In rng
+        ' Nếu công thức thay đổi quy luật, tô màu ô
+        If cell.FormulaR1C1 <> relativeFormula Then
+            cell.Interior.Color = RGB(255, 0, 0) ' Tô màu đỏ
+            changedCells = changedCells + 1
+        End If
+    Next cell
+
+    ' Hiển thị thông báo cuối cùng
+    If changedCells > 0 Then
+        MsgBox changedCells & " ô đã thay đổi quy luật."
+    Else
+        MsgBox "Không có ô nào thay đổi quy luật."
+    End If
+End Sub
